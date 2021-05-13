@@ -11,7 +11,7 @@ const Aside = () => {
       {
         links.map(nav => {
           return (
-            <Link href={nav.link} title={nav.title} type="aside" />
+            <Link key={nav.title} href={nav.link} title={nav.title} type="aside" />
           )
         })
       }

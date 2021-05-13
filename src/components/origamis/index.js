@@ -1,8 +1,8 @@
 import React from 'react'
-import Origami from '../origami'
 import styles from './index.module.css'
+import Origami from '../origami'
 
-class Posts extends React.Component {
+class Origamis extends React.Component {
   constructor(props) {
     super(props)
 
@@ -12,7 +12,8 @@ class Posts extends React.Component {
   }
 
   getOrigamis = async () => {
-    const promise = await fetch('http://localhost:9999/api/origami')
+    const { length } = this.props
+    const promise = await fetch(`http://localhost:9999/api/origami?length=${length}`)
     const origamis = await promise.json()
 
     this.setState({
@@ -37,14 +38,11 @@ class Posts extends React.Component {
   render() {
     
     return (
-      <div className={styles.main}>
-        <h1 className={styles.title}>Origamis</h1>
         <div className={styles["origamis-wrapper"]}>
           {this.renderOrigamis()}
         </div>
-      </div>
     )
   }
 }
 
-export default Posts
+export default Origamis
