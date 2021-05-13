@@ -13,7 +13,7 @@ const Header = () => {
       {
         links.map(nav => {
           return (
-            <Link href={nav.link} title={nav.title} type="header" />
+            <Link key={nav.title} href={nav.link} title={nav.title} type="header" />
           )
         })
       }

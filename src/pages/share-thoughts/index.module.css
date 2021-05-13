@@ -1,0 +1,16 @@
+.input {
+  text-align: center;
+}
+
+.text-container {
+  width: 40%;
+  margin: 0 auto;
+  display: block;
+  resize: none;
+  padding: 2;
+  height: 10vh;
+  font-style: italic;
+  border-radius: 6px;
+  border: 1px solid #234465;
+  color: #234465;
+}
