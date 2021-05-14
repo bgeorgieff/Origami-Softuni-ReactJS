@@ -6,7 +6,9 @@ import {
 } from 'react-router-dom'
 
 import Publications from './pages/publications'
-import ShareThoughtsPage from './pages/share-thoughts';
+import Register from './pages/register'
+import ShareThoughtsPage from './pages/share-thoughts'
+import Login from './pages/login'
 
 const Navigation = () => {
   return (
@@ -14,6 +16,8 @@ const Navigation = () => {
       <Switch>
         <Route exact path="/" component={Publications} />
         <Route path="/share" component={ShareThoughtsPage} />
+        <Route path="/register" component={Register} />
+        <Route path="/login" component={Login} />
       </Switch>
     </BrowserRouter>
   )
