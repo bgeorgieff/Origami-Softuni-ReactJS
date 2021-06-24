@@ -3,47 +3,68 @@ import Submit from '../../components/button'
 import Input from '../../components/input';
 import PageWrapper from '../../components/page-wrapper'
 import Title from '../../components/title'
-import style from './index.module.css';
+import style from './index.module.css'
+import authenticate from '../../utils/authenticate'
 
 class Login extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      email: '',
+      username: '',
       password: ''
     }
   }
 
-  onChange = (event, type) => {
+  handleChange = (event, type) => {
     const newState = {}
     newState[type] = event.target.value
 
     this.setState(newState)
   }
 
+  handleSubmit = async (event) => {
+    event.preventDefault()
+
+    const { 
+      username, 
+      password
+    } = this.state
+
+    await authenticate('http://localhost:9999/api/user/login', {
+      username,
+      password
+    }, () => {
+      console.log('yey')
+      this.props.history.push('/')
+    }, (e) => {
+      console.log('ney', e)
+    })
+  }
+
   render() {
     const {
-      email,
+      username,
       password
     } = this.state
 
     return (
         <PageWrapper>
-            <div className={style.container}>
+            <form className={style.container} onSubmit={this.handleSubmit}>
               <Title title="Login" />
               <Input 
-                value={email}
-                onChange={(e) => {this.onChange(e, 'email')}}
-                label="Email"
-                id="email" />
+                value={username}
+                onChange={(e) => {this.handleChange(e, 'username')}}
+                label="Username"
+                id="username" />
               <Input 
+                type="password"
                 value={password}
-                onChange={(e) => {this.onChange(e, 'password')}}
+                onChange={(e) => {this.handleChange(e, 'password')}}
                 label="Password"
                 id="repassword" />
               <Submit title="Login" />
-            </div>
+            </form>
         </PageWrapper>
     )
   }

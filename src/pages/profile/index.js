@@ -24,6 +24,7 @@ class Profile extends Component {
     }
     
     const user = await response.json()
+    
     this.setState({
       username: user.username,
       posts: user.posts && user.posts.length

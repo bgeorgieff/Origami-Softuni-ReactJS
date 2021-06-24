@@ -3,6 +3,7 @@ import Submit from '../../components/button'
 import Input from '../../components/input';
 import PageWrapper from '../../components/page-wrapper'
 import Title from '../../components/title'
+import authenticate from '../../utils/authenticate';
 import styles from './index.module.css';
 
 class Register extends Component {
@@ -10,7 +11,7 @@ class Register extends Component {
     super(props)
 
     this.state = {
-      email: "",
+      username: "",
       password: "",
       rePassword: ""
     }
@@ -23,34 +24,55 @@ class Register extends Component {
     this.setState(newState)
   }
 
+  handleSubmit = async (event) => {
+    event.preventDefault()
+
+    const { 
+      username, 
+      password
+    } = this.state
+
+    await authenticate('http://localhost:9999/api/user/register', {
+      username,
+      password
+    }, () => {
+      console.log('yey')
+      this.props.history.push('/')
+    }, (e) => {
+      console.log('ney', e);
+    })
+  }
+
   render () {
     const {
-      email,
+      username,
       password,
       rePassword
     } = this.state
 
     return (
       <PageWrapper>
-        <div className={styles.container}>
+        <form className={styles.container} onSubmit={this.handleSubmit}>
           <Title title="Register" />
           <Input 
-            value={email}
-            onChange={(e) => {this.onChange(e, 'email')}}
-            label="Email"
-            id="email" />
+            value={username}
+            onChange={(e) => {this.onChange(e, 'username')}}
+            label="Username"
+            id="username" />
           <Input 
+            type="password"
             value={password}
             onChange={(e) => {this.onChange(e, 'password')}}
             label="Password"
             id="password" />
           <Input 
+            type="password"
             value={rePassword}
             onChange={(e) => {this.onChange(e, 'rePassword')}}
             label="Repeat Password"
             id="repeat-password" />
           <Submit title="Register" />
-        </div>
+        </form>
       </PageWrapper>
     )
   }
