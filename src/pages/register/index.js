@@ -3,8 +3,9 @@ import Submit from '../../components/button'
 import Input from '../../components/input';
 import PageWrapper from '../../components/page-wrapper'
 import Title from '../../components/title'
-import authenticate from '../../utils/authenticate';
-import styles from './index.module.css';
+import authenticate from '../../utils/authenticate'
+import styles from './index.module.css'
+import UserContext from '../../Context'
 
 class Register extends Component {
   constructor(props) {
@@ -16,6 +17,8 @@ class Register extends Component {
       rePassword: ""
     }
   }
+
+  static contextType = UserContext
 
   onChange = (event, type) => {
     const newState = {}
@@ -35,8 +38,8 @@ class Register extends Component {
     await authenticate('http://localhost:9999/api/user/register', {
       username,
       password
-    }, () => {
-      console.log('yey')
+    }, (user) => {
+      this.context.logIn(user)
       this.props.history.push('/')
     }, (e) => {
       console.log('ney', e);
