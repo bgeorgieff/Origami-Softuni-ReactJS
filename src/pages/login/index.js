@@ -5,6 +5,7 @@ import PageWrapper from '../../components/page-wrapper'
 import Title from '../../components/title'
 import style from './index.module.css'
 import authenticate from '../../utils/authenticate'
+import UserContext from '../../Context';
 
 class Login extends Component {
   constructor(props) {
@@ -15,6 +16,8 @@ class Login extends Component {
       password: ''
     }
   }
+
+  static contextType = UserContext
 
   handleChange = (event, type) => {
     const newState = {}
@@ -34,11 +37,11 @@ class Login extends Component {
     await authenticate('http://localhost:9999/api/user/login', {
       username,
       password
-    }, () => {
-      console.log('yey')
+    }, (user) => {
+      this.context.logIn(user)
       this.props.history.push('/')
     }, (e) => {
-      console.log('ney', e)
+      console.log('Error', e)
     })
   }
 
@@ -49,23 +52,23 @@ class Login extends Component {
     } = this.state
 
     return (
-        <PageWrapper>
-            <form className={style.container} onSubmit={this.handleSubmit}>
-              <Title title="Login" />
-              <Input 
-                value={username}
-                onChange={(e) => {this.handleChange(e, 'username')}}
-                label="Username"
-                id="username" />
-              <Input 
-                type="password"
-                value={password}
-                onChange={(e) => {this.handleChange(e, 'password')}}
-                label="Password"
-                id="repassword" />
-              <Submit title="Login" />
-            </form>
-        </PageWrapper>
+      <PageWrapper>
+        <form className={style.container} onSubmit={this.handleSubmit}>
+          <Title title="Login" />
+          <Input 
+            value={username}
+            onChange={(e) => {this.handleChange(e, 'username')}}
+            label="Username"
+            id="username" />
+          <Input 
+            type="password"
+            value={password}
+            onChange={(e) => {this.handleChange(e, 'password')}}
+            label="Password"
+            id="repassword" />
+          <Submit title="Login" />
+        </form>
+      </PageWrapper>
     )
   }
 }

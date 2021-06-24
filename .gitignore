@@ -2,6 +2,7 @@
 
 # RESTAPI
 /REST API/node_modules
+/REST API/.env
 
 # dependencies
 /node_modules
