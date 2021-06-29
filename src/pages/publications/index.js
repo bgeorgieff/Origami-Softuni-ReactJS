@@ -8,7 +8,7 @@ class Publications extends React.Component {
   static contextType = UserContext
 
   render() {
-    console.log(this.context);
+    // console.log(this.context);
     return (
       <PageWrapper>
         <Title title="Publications" />

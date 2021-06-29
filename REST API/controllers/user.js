@@ -2,6 +2,7 @@ const models = require('../models');
 const config = require('../config/config');
 const utils = require('../utils');
 
+
 module.exports = {
     get: (req, res, next) => {
         models.User.findById(req.query.id)
@@ -18,6 +19,38 @@ module.exports = {
                     res.header("Authorization", token).send(createdUser);
                 }).catch(next)
         },
+        
+        authenticate: (req, res, next) => {
+            const token = req.body.token || '';
+
+            Promise.all([
+                utils.jwt.verifyToken(token),
+                models.TokenBlacklist.findOne({ token })
+            ])
+            .then(([data, blacklistToken]) => {
+                if (blacklistToken) { return Promise.reject(new Error('blacklisted token')) }
+
+                models.User.findById(data.id)
+                    .then((user) => {
+                        return res.send({
+                            status: true,
+                            user
+                        })
+                    });
+            })
+            .catch(err => {
+
+                if (['token expired', 'blacklisted token', 'jwt must be provided'].includes(err.message)) {
+                    res.status(401).send('UNAUTHORIZED!');
+                    return;
+                }
+
+                res.send({ 
+                    status: false
+                })
+            })
+        },
+
 
         login: (req, res, next) => {
             const { username, password } = req.body;

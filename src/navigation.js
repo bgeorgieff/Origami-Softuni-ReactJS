@@ -16,6 +16,7 @@ const Navigation = () => {
   return (
     <BrowserRouter>
       <Switch>
+        {/* {loggedIn ?         <Route path="/share" component={ShareThoughtsPage} /> : <Redirect to={} component={}/>} */}
         <Route exact path="/" component={Publications} />
         <Route path="/share" component={ShareThoughtsPage} />
         <Route path="/register" component={Register} />
