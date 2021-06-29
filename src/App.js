@@ -1,12 +1,19 @@
 import react from 'react'
 import UserContext from './Context'
 
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^|;) ?' + name + '=([^;]*)'));
+  if (match) {
+    return match ? match[2] : null
+  }
+}
+
 class App extends react.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      loggedIn: false,
+      loggedIn: null,
       user: null
     }
   }
@@ -19,9 +26,42 @@ class App extends react.Component {
   }
 
   logOut = () => {
+    document.cookie = "x-auth-token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
     this.setState({
       loggedIn: false,
       user: null
+    })
+  }
+
+  componentDidMount() {
+    const token = getCookie('x-auth-token')
+
+    console.log(token);
+
+    if(!token) {
+      this.logOut()
+      return
+    }
+
+    fetch('http://localhost:9999/api/user/authenticate', {
+      method: 'POST',
+      body: JSON.stringify({
+        token
+      }),
+      headers: {
+        'Content-type': 'application/json'
+      }
+    }).then((promise) => {
+      return promise.json()
+    }).then((response) => {
+      if(response) {
+        this.logIn({
+          username: response.user.username,
+          id: response.user._id
+        })
+      } else {
+        this.logOut()
+      }
     })
   }
 
@@ -30,6 +70,11 @@ class App extends react.Component {
       loggedIn,
       user
     } = this.state
+
+        
+    if(loggedIn === null) {
+      return (<div>Loading...</div>)
+    }
 
     return (
       <UserContext.Provider value={{
