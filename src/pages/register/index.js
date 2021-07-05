@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useContext, useState } from 'react'
 import Submit from '../../components/button'
 import Input from '../../components/input';
 import PageWrapper from '../../components/page-wrapper'
@@ -6,79 +6,54 @@ import Title from '../../components/title'
 import authenticate from '../../utils/authenticate'
 import styles from './index.module.css'
 import UserContext from '../../Context'
+import { useHistory } from 'react-router-dom';
 
-class Register extends Component {
-  constructor(props) {
-    super(props)
+const Register = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [rePassword, setRepassword] = useState('')
+  const context = useContext(UserContext)
+  const history = useHistory()
 
-    this.state = {
-      username: "",
-      password: "",
-      rePassword: ""
-    }
-  }
-
-  static contextType = UserContext
-
-  onChange = (event, type) => {
-    const newState = {}
-    newState[type] = event.target.value
-
-    this.setState(newState)
-  }
-
-  handleSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-
-    const { 
-      username, 
-      password
-    } = this.state
 
     await authenticate('http://localhost:9999/api/user/register', {
       username,
       password
     }, (user) => {
-      this.context.logIn(user)
-      this.props.history.push('/')
+      context.logIn(user)
+      history.push('/')
     }, (e) => {
       console.log('ney', e);
     })
   }
 
-  render () {
-    const {
-      username,
-      password,
-      rePassword
-    } = this.state
-
-    return (
-      <PageWrapper>
-        <form className={styles.container} onSubmit={this.handleSubmit}>
-          <Title title="Register" />
-          <Input 
-            value={username}
-            onChange={(e) => {this.onChange(e, 'username')}}
-            label="Username"
-            id="username" />
-          <Input 
-            type="password"
-            value={password}
-            onChange={(e) => {this.onChange(e, 'password')}}
-            label="Password"
-            id="password" />
-          <Input 
-            type="password"
-            value={rePassword}
-            onChange={(e) => {this.onChange(e, 'rePassword')}}
-            label="Repeat Password"
-            id="repeat-password" />
-          <Submit title="Register" />
-        </form>
-      </PageWrapper>
-    )
-  }
+  return (
+    <PageWrapper>
+      <form className={styles.container} onSubmit={handleSubmit}>
+        <Title title="Register" />
+        <Input 
+          value={username}
+          onChange={(e) => {setUsername(e.target.value)}}
+          label="Username"
+          id="username" />
+        <Input 
+          type="password"
+          value={password}
+          onChange={(e) => {setPassword(e.target.value)}}
+          label="Password"
+          id="password" />
+        <Input 
+          type="password"
+          value={rePassword}
+          onChange={(e) => {setRepassword(e.target.value)}}
+          label="Repeat Password"
+          id="repeat-password" />
+        <Submit title="Register" />
+      </form>
+    </PageWrapper>
+  )
 }
 
 export default Register
