@@ -21,13 +21,15 @@ module.exports = {
         },
         
         authenticate: (req, res, next) => {
-            const token = req.body.token || '';
+            const token = req.headers.authorization || '';
 
+            
             Promise.all([
                 utils.jwt.verifyToken(token),
                 models.TokenBlacklist.findOne({ token })
             ])
             .then(([data, blacklistToken]) => {
+
                 if (blacklistToken) { return Promise.reject(new Error('blacklisted token')) }
 
                 models.User.findById(data.id)
